@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
-import '../../models/product.dart';
+import '../../data/models/product.dart';
 import '../widget/product_item.dart';
 import 'add_new_product_screen.dart';
 
@@ -34,14 +34,19 @@ class _ProductListScreensState extends State<ProductListScreens> {
       floatingActionButton: FloatingActionButton(onPressed: (){
         Navigator.pushNamed(context,AddNewProductScreen.name);
       },),
-      body: Visibility(
-        visible: productLoading==false,
-        replacement:  const Center(child: CircularProgressIndicator()),
-        child: ListView.builder(
-            itemCount: productList.length,
-            itemBuilder: (context,index){
-          return ProductItem(product: productList[index],);
-        }),
+      body: RefreshIndicator(
+        onRefresh: () async{
+          getProductList();
+        },
+        child: Visibility(
+          visible: productLoading==false,
+          replacement:  const Center(child: CircularProgressIndicator()),
+          child: ListView.builder(
+              itemCount: productList.length,
+              itemBuilder: (context,index){
+            return ProductItem(product: productList[index],);
+          }),
+        ),
       ),
     );
   }

@@ -1,6 +1,8 @@
-import 'package:crud_live_project/models/product.dart';
+
 import 'package:crud_live_project/ui/screens/update_product_screen.dart';
 import 'package:flutter/material.dart';
+
+import '../../data/models/product.dart';
 
 class ProductItem extends StatelessWidget {
 

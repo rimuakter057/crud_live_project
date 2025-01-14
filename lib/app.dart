@@ -1,5 +1,4 @@
 
-import 'package:crud_live_project/routes/routes_name.dart';
 import 'package:crud_live_project/ui/screens/add_new_product_screen.dart';
 import 'package:crud_live_project/ui/screens/product_list_screen.dart';
 import 'package:crud_live_project/ui/screens/update_product_screen.dart';

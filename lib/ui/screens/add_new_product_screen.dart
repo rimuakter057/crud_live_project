@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
@@ -129,13 +128,15 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
                   _formKey.currentState!.validate()){
                   _addNewProduct();
                 }
-              }, child: const Text('Add Product')),
-            )
+              },
+                  child: const Text('Add Product')),
+            ),
           ],
         ),
       ),
     );
   }
+
   Future <void> _addNewProduct()async{
     _addNewProductInProgress = true;
     setState(() {});
