@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:crud_live_project/data/services.dart';
+import 'package:crud_live_project/data/utils/url.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
@@ -34,6 +36,7 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
     );
   }
 
+  // text from field
   Form buildProductForm() {
     return Form(
       key: _formKey,
@@ -123,12 +126,7 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
               replacement: const Center(
                 child: CircularProgressIndicator(),
               ),
-              child: ElevatedButton(onPressed: () {
-                if(
-                  _formKey.currentState!.validate()){
-                  _addNewProduct();
-                }
-              },
+              child: ElevatedButton(onPressed: _onTap,
                   child: const Text('Add Product')),
             ),
           ],
@@ -137,45 +135,60 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
     );
   }
 
-  Future <void> _addNewProduct()async{
+  // add api function
+  Future <void> addProduct() async {
     _addNewProductInProgress = true;
-    setState(() {});
-    Uri uri = Uri.parse('https://crud.teamrabbil.com/api/v1/CreateProduct');
+    setState(() {
 
-    Map<String, dynamic> requestBody = {
+    });
+
+    //add body
+    Map <String, dynamic> requestBody = {
       "Img": _imageTEController.text.trim(),
       "ProductCode": _codeTEController.text.trim(),
       "ProductName": _nameTEController.text.trim(),
       "Qty": _quantityTEController.text.trim(),
       "TotalPrice": _totalPriceTEController.text.trim(),
-      "UnitPrice": _priceTEController.text.trim()
+      "UnitPrice": _priceTEController.text.trim(),
     };
 
-    Response response = await post(
-      uri,
-      headers: {'Content-type': 'application/json'},
-      body: jsonEncode(requestBody),
-    );
+    // api instigation
+    final NetworkResponse response = await NetworkCaller.postRequest(
+        body: requestBody,
+        url: Urls.addNewProduct);
+    _addNewProductInProgress = true;
+    setState(() {
 
-    print(response.statusCode);
-    print(response.body);
-    _addNewProductInProgress = false;
-    setState(() {});
-    if (response.statusCode == 200) {
+    });
+    if(response.isSuccess){
       _clearTextFields();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('New product added!'),
+        SnackBar(
+          content: Text("success"),
+          duration: const Duration(seconds: 4),
         ),
       );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('New product add failed! Try again.'),
+    }else{
+     ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("failed"),
+          duration: const Duration(seconds: 4),
         ),
       );
     }
+
   }
+
+// add button on tap
+   void _onTap(){
+     if(
+     _formKey.currentState!.validate()){
+       addProduct();
+       _addNewProductInProgress =false;
+     }else{
+       print("not valid");
+     }
+   }
 
   void _clearTextFields() {
     _nameTEController.clear();
